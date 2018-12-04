@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Civic Link</title>
+    <meta charset="utf-8" />
+    <link
+        rel="stylesheet"
+        href="http://cdn.leafletjs.com/leaflet-0.7/leaflet.css"
+    />
+</head>
+<body>
+
+    <table>
+      <tr>
+        <td style="vertical-align:top">
+          <div id="map" style="width: 800px; height: 500px"></div>
+        </td>
+        <td style="vertical-align:top">
+          <input type="file" id="fileinput" />
+          <p>Latitude: <input type="text" id="lat"></p>
+          <p>Longitude: <input type="text" id="long"></p>
+          <button type="button" onclick="submit()">Submit</button>
+          <div id="picture"></div>
+        </td>
+      </tr>
+    </table>
+
+    <script
+       src="http://cdn.leafletjs.com/leaflet-0.7/leaflet.js">
+    </script>
+
+    <script
+       src="http://leaflet.github.io/Leaflet.heat/dist/leaflet-heat.js">
+    </script>
+    <!-- <script src="sneakers.js"></script> -->
+    <script>
+
+      // heat map
+
+      var mit = [42.3601, -71.0942];
+      var zoom = 13;
+
+      var map = L.map('map').setView(mit, zoom);
+      mapLink =
+        '<a href="http://openstreetmap.org">OpenStreetMap</a>';
+      L.tileLayer(
+        'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; ' + mapLink + ' Contributors',
+        maxZoom: 18,
+      }).addTo(map);
+
+      // data for the heat map
+      var points = [
+      // [42.3601, -71.0942,90],
+      // [42.3601, -71.092,12],
+      // [42.3503, -71.0810,8],
+      // [42.3611, -71.093,12],
+      // [42.3601, -71.07,5],
+      // [42.3621, -71.08,4.5],
+      //
+      // [41.8992,-71.3117,57],
+      // [41.7495,-71.02,1.8642],
+      // [41.7008,-71.0876,2.1629],
+      // [40.7371,-71.0682,10],
+      // [40.7511,-73.0623,70],
+      // [40.7557,-74.3391,60],
+      // [40.6881,-75.2726,8.1336],
+      // [40.7463,-74.1194,2.7113],
+      // [40.6966,-71.1238,2.4168]
+      ];
+
+      var heat = L.heatLayer(points).addTo(map);
+
+      // upload picture
+
+      var currentFile
+
+      document.getElementById('fileinput').addEventListener('change', function(){
+        var file = this.files[0];
+        currentFile = file
+
+        var picture = document.getElementById('picture');
+
+        var img = document.createElement("img");
+        img.file = file;
+        picture.appendChild(img);
+
+        // Using FileReader to display the image content
+        var reader = new FileReader();
+        reader.onload = (function(aImg) { return function(e) { aImg.src = e.target.result; }; })(img);
+        reader.readAsDataURL(file);
+      }, false)
+
+      // record location
+      function submit() {
+        var lat, long;
+
+        // Get the value of the input field with id="numb"
+        lat = document.getElementById("lat").value;
+        long = document.getElementById("long").value;
+
+        heat.addLatLng(L.latLng(lat, long))
+
+        // debugging
+        console.log(currentFile)
+        console.log(lat + ', ' + long)
+      }
+
+
+    </script>
+</body>
+</html>
