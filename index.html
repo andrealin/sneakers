@@ -7,6 +7,11 @@
         rel="stylesheet"
         href="http://cdn.leafletjs.com/leaflet-0.7/leaflet.css"
     />
+    <style>
+        img {
+            max-width:400px;
+        }
+    </style>
 </head>
 <body>
 
@@ -16,7 +21,8 @@
           <div id="map" style="width: 800px; height: 500px"></div>
         </td>
         <td style="vertical-align:top">
-          <input type="file" id="fileinput" />
+          <p>Take a picture: <input type="file" accept="image/*" capture="camera" id="camerainput"/></p>
+          <p>Choose a file:<input type="file" id="fileinput" /></p>
           <p>Latitude: <input type="text" id="lat"></p>
           <p>Longitude: <input type="text" id="long"></p>
           <button type="button" onclick="submit()">Submit</button>
@@ -75,7 +81,7 @@
 
       var currentFile
 
-      document.getElementById('fileinput').addEventListener('change', function(){
+      function showPicture() {
         var file = this.files[0];
         currentFile = file
 
@@ -89,7 +95,10 @@
         var reader = new FileReader();
         reader.onload = (function(aImg) { return function(e) { aImg.src = e.target.result; }; })(img);
         reader.readAsDataURL(file);
-      }, false)
+      }
+
+      document.getElementById('camerainput').addEventListener('change', showPicture, false)
+      document.getElementById('fileinput').addEventListener('change', showPicture, false)
 
       // record location
       function submit() {
